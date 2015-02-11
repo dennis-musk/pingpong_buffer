@@ -234,7 +234,7 @@ int pingpong_init(struct pingpong_buffer *pp_buf)
 	return 0;
 }
 
-void pingping_free(struct pingpong_buffer *pp_buf)
+void pingpong_free(struct pingpong_buffer *pp_buf)
 {
 	if (pp_buf->buf1.addr) {
 		free(pp_buf->buf1.addr);
@@ -263,21 +263,21 @@ int main()
 	err = pthread_create(&read_pid, NULL, pingpong_read, &pp_buf);
 	if (err) { 
 		perror("pthread_create()");
-		pingping_free(&pp_buf);
+		pingpong_free(&pp_buf);
 		exit(1);
 	}
 	err = pthread_create(&write_pid, NULL, pingpong_write, &pp_buf);
 	if (err) {
 		perror("pthread_create()");
 		pthread_cancel(read_pid);
-		pingping_free(&pp_buf);
+		pingpong_free(&pp_buf);
 		exit(1);
 	}
 
 	pthread_join(read_pid, NULL);
 	pthread_join(write_pid, NULL);
 
-	pingping_free(&pp_buf);
+	pingpong_free(&pp_buf);
 
 	exit(0);
 }
